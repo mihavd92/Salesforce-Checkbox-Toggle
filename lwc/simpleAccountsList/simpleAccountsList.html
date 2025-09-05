@@ -1,0 +1,89 @@
+<template>
+    <lightning-card title="Simple Accounts List" icon-name="standard:account">
+        <div class="slds-p-horizontal_medium">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading accounts..."></lightning-spinner>
+            </template>
+            
+            <template if:true={error}>
+                <div class="slds-text-color_error slds-p-around_medium">
+                    Error loading accounts: {error.body.message}
+                </div>
+            </template>
+
+            <template if:false={isLoading}>
+                <template if:false={error}>
+
+                    <div class="slds-table_col-bordered slds-table_cell-buffer slds-scrollable">
+                        <table class="slds-table slds-table_bordered slds-table_striped">
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th class="slds-text-title_caps" scope="col">
+                                        <div class="slds-truncate" title="Account Name">Account Name</div>
+                                    </th>
+                                    <th class="slds-text-title_caps" scope="col">
+                                        <div class="slds-truncate" title="Billing State">Billing State</div>
+                                    </th>
+                                    <th class="slds-text-title_caps" scope="col">
+                                        <div class="slds-truncate" title="Phone">Phone</div>
+                                    </th>
+                                    <th class="slds-text-title_caps" scope="col">
+                                        <div class="slds-truncate" title="Type">Type</div>
+                                    </th>
+                                    <th class="slds-text-title_caps" scope="col">
+                                        <div class="slds-truncate" title="Validated">Validated</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={accounts} for:item="account">
+                                    <tr key={account.Id}>
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate">
+                                                <a href={account.recordUrl} target="_blank">{account.Name}</a>
+                                            </div>
+                                        </td>
+                                        <td data-label="Billing State">
+                                            <div class="slds-truncate">{account.BillingState}</div>
+                                        </td>
+                                        <td data-label="Phone">
+                                            <div class="slds-truncate">{account.Phone}</div>
+                                        </td>
+                                        <td data-label="Type">
+                                            <div class="slds-truncate">{account.Type}</div>
+                                        </td>
+                                        <td data-label="Validated">
+                                            <div class="slds-form-element">
+                                                <label class="slds-checkbox_toggle slds-grid">
+                                                    <span class="slds-form-element__label slds-m-bottom_none slds-assistive-text">
+                                                        Toggle Validated for {account.Name}
+                                                    </span>
+                                                    <input 
+                                                        type="checkbox" 
+                                                        checked={account.Validated__c} 
+                                                        data-account-id={account.Id}
+                                                        onchange={handleToggleChange}/>
+                                                    <span class="slds-checkbox_faux_container">
+                                                        <span class="slds-checkbox_faux"></span>
+                                                        <span class="slds-checkbox_on">True</span>
+                                                        <span class="slds-checkbox_off">False</span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <template if:false={accounts.length}>
+                        <div class="slds-text-align_center slds-p-around_large">
+                            <p class="slds-text-body_regular">No accounts found.</p>
+                        </div>
+                    </template>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>
